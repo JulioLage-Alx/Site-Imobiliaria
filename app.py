@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, flash
 import mysql.connector
 from validador import validar_cep, validar_cpf, validar_telefone, validar_valor, validar_data
-import os
 
 app = Flask(__name__)
 
@@ -19,8 +18,10 @@ app.secret_key = '001'
 # Rota para a página inicial
 @app.route('/')
 def home():
-    return render_template('index.html')  # Página inicial
+    # Renderiza o template index.html
+    return render_template('index.html')
 
+# Rota para adicionar imóvel
 @app.route('/add_imovel', methods=["GET", "POST"])
 def add_imovel():
     if request.method == "POST":
@@ -56,6 +57,7 @@ def add_imovel():
 
     return render_template('imovel.html')  # Formulário para adicionar imóvel
 
+# Rota para adicionar inquilino
 @app.route('/add_inquilino', methods=["GET", "POST"])
 def add_inquilino():
     if request.method == "POST":
