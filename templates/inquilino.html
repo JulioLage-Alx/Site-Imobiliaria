@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Inquilino</title>
+</head>
+<body>
+    <h1>Adicionar Inquilino</h1>
+    <form method="POST">
+        <label>Nome: <input type="text" name="nome" required></label><br>
+        <label>CPF: <input type="text" name="cpf" required></label><br>
+        <label>Telefone: <input type="text" name="telefone" required></label><br>
+        <label>Data de Nascimento: <input type="date" name="data_nascimento" required></label><br>
+        <label>Imóvel:
+            <select name="imovel_id" required>
+                {% for imovel in imoveis %}
+                    <option value="{{ imovel.id }}">{{ imovel.endereco }}</option>
+                {% endfor %}
+            </select>
+        </label><br>
+        <button type="submit">Adicionar</button>
+    </form>
+    <a href="/">Voltar</a>
+</body>
+</html>
