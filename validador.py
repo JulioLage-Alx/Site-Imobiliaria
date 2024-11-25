@@ -1,31 +1,38 @@
 import re
 from datetime import datetime
 
-# Validação do CEP
 def validar_cep(cep):
-    return bool(re.fullmatch(r'\d{8}', cep))
+    return bool(re.fullmatch(r'\d{5}-\d{3}', cep))
 
-# Validação do CPF (básica)
 def validar_cpf(cpf):
-    
-    return len(cpf) == 11 and cpf.isdigit()
+    cpf = cpf.replace(".", "").replace("-", "")
+    if len(cpf) != 11 or not cpf.isdigit():
+        return False
+    if cpf == cpf[0] * 11:
+        return False
+    def calcular_dv(cpf, pesos):
+        total = sum(int(cpf[i]) * pesos[i] for i in range(len(pesos)))
+        resto = total % 11
+        return 0 if resto < 2 else 11 - resto
+    pesos1 = [10, 9, 8, 7, 6, 5, 4, 3, 2]
+    pesos2 = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2]
+    dv1 = calcular_dv(cpf, pesos1)
+    dv2 = calcular_dv(cpf, pesos2)
+    return cpf[-2:] == f"{dv1}{dv2}"
 
-
-# Validação do telefone
 def validar_telefone(telefone):
-    return bool(re.fullmatch(r'\d{10,11}', telefone))
+    return bool(re.fullmatch(r'\d{2}[9]?\d{8}', telefone))
 
-# Validação do valor do aluguel
 def validar_valor(valor):
     try:
-        return float(valor) > 0
+        valor = float(valor)
+        return valor > 1
     except ValueError:
         return False
 
-# Validação da data de nascimento
 def validar_data(data):
     try:
-        datetime.strptime(data, "%Y-%m-%d")
-        return True
+        data_nascimento = datetime.strptime(data, "%Y-%m-%d")
+        return data_nascimento < datetime.today()
     except ValueError:
         return False

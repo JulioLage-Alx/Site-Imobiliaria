@@ -18,7 +18,6 @@ app.secret_key = '001'
 # Rota para a página inicial
 @app.route('/')
 def home():
-    # Renderiza o template index.html
     return render_template('index.html')
 
 # Rota para adicionar imóvel
@@ -35,7 +34,7 @@ def add_imovel():
             flash("O endereço é obrigatório.")
             return redirect('/add_imovel')
         if not validar_cep(cep):
-            flash("O CEP deve conter exatamente 8 dígitos numéricos.")
+            flash("O CEP deve ser no formato XXXXX-XXX.")
             return redirect('/add_imovel')
         if not validar_valor(valor_aluguel):
             flash("O valor do aluguel deve ser um número positivo.")
@@ -55,7 +54,7 @@ def add_imovel():
         flash("Imóvel adicionado com sucesso!")
         return redirect('/')
 
-    return render_template('imovel.html')  # Formulário para adicionar imóvel
+    return render_template('imovel.html')
 
 # Rota para adicionar inquilino
 @app.route('/add_inquilino', methods=["GET", "POST"])
@@ -100,7 +99,7 @@ def add_inquilino():
     cursor.execute("SELECT id, endereco FROM imovel")
     imoveis = cursor.fetchall()
 
-    return render_template('inquilino.html', imoveis=imoveis)  # Formulário para adicionar inquilino
+    return render_template('inquilino.html', imoveis=imoveis)
 
 if __name__ == '__main__':
     app.run(debug=True)
