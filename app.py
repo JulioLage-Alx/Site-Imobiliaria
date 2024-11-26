@@ -145,6 +145,78 @@ def add_inquilino():
     return render_template('inquilino.html', imoveis=imoveis, nome=nome, cpf=cpf, telefone=telefone, data_nascimento=data_nascimento, imovel_id=imovel_id)
 
 
+@app.route('/excluir_inquilino/<int:id>', methods=['GET'])
+def excluir_inquilino(id):
+    try:
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM inquilino WHERE id = %s", (id,))
+        db.commit()
+        cursor.close()
+        flash("Inquilino excluído com sucesso!", "success")
+    except Exception as e:
+        flash("Erro ao excluir inquilino: " + str(e), "danger")
+    return redirect('/listar')
+
+# Rota para editar um imóvel
+@app.route('/editar_imovel/<int:id>', methods=['GET', 'POST'])
+def editar_imovel(id):
+    cursor = db.cursor(dictionary=True)
+    if request.method == 'POST':
+        rua = request.form['rua']
+        cidade = request.form['cidade']
+        numero = request.form['numero']
+        complemento = request.form['complemento']
+        cep = request.form['cep']
+        valor_aluguel = request.form['valor_aluguel']
+        nome_proprietario = request.form['nome_proprietario']
+
+        cursor.execute("""
+            UPDATE imovel SET rua = %s, cidade = %s, numero = %s, complemento = %s, cep = %s, valor_aluguel = %s, nome_proprietario = %s
+            WHERE id = %s
+        """, (rua, cidade, numero, complemento, cep, valor_aluguel, nome_proprietario, id))
+        db.commit()
+        cursor.close()
+        flash("Imóvel editado com sucesso!", "success")
+        return redirect('/listar')
+
+    cursor.execute("SELECT * FROM imovel WHERE id = %s", (id,))
+    imovel = cursor.fetchone()
+    cursor.close()
+    return render_template('editar_imovel.html', imovel=imovel)
+
+# Rota para excluir um imóvel
+@app.route('/excluir_imovel/<int:id>', methods=['GET'])
+def excluir_imovel(id):
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM inquilino WHERE imovel_id = %s", (id,))
+    inquilinos = cursor.fetchall()
+
+    if inquilinos:
+        flash("Erro: Não é possível excluir o imóvel, pois existem inquilinos cadastrados nele.", "danger")
+    else:
+        cursor.execute("DELETE FROM imovel WHERE id = %s", (id,))
+        db.commit()
+        flash("Imóvel excluído com sucesso!", "success")
+    cursor.close()
+    return redirect('/listar')
+
+# Rota para listar inquilinos e imóveis
+@app.route('/listar')
+def listar_inquilinos_imoveis():
+    cursor = db.cursor(dictionary=True)
+
+    # Consulta os dados dos inquilinos
+    cursor.execute("SELECT id, nome, cpf, telefone, data_nascimento, imovel_id FROM inquilino")
+    inquilinos = cursor.fetchall()
+
+    # Consulta os dados dos imóveis
+    cursor.execute("SELECT id, rua, cidade, numero, complemento, cep, valor_aluguel, nome_proprietario FROM imovel")
+    imoveis = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template('listar.html', inquilinos=inquilinos, imoveis=imoveis)
+
 
 
 if __name__ == '__main__':
