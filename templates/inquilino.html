@@ -68,25 +68,31 @@
             <form method="POST">
                 <div class="mb-3">
                     <label for="nome" class="form-label">Nome:</label>
-                    <input type="text" id="nome" name="nome" class="form-control" placeholder="Digite o nome completo" required>
+                    <input type="text" id="nome" name="nome" class="form-control" placeholder="Digite o nome completo" 
+                           value="{{ nome if nome else '' }}" required>
                 </div>
                 <div class="mb-3">
                     <label for="cpf" class="form-label">CPF:</label>
-                    <input type="text" id="cpf" name="cpf" class="form-control" placeholder="Digite o CPF" required>
+                    <input type="text" id="cpf" name="cpf" class="form-control" placeholder="Digite o CPF" 
+                           value="{{ cpf if cpf else '' }}" required>
                 </div>
                 <div class="mb-3">
                     <label for="telefone" class="form-label">Telefone:</label>
-                    <input type="text" id="telefone" name="telefone" class="form-control" placeholder="Digite o telefone" required>
+                    <input type="text" id="telefone" name="telefone" class="form-control" placeholder="Digite o telefone" 
+                           value="{{ telefone if telefone else '' }}" required>
                 </div>
                 <div class="mb-3">
                     <label for="data_nascimento" class="form-label">Data de Nascimento:</label>
-                    <input type="date" id="data_nascimento" name="data_nascimento" class="form-control" required>
+                    <input type="date" id="data_nascimento" name="data_nascimento" class="form-control" 
+                           value="{{ data_nascimento if data_nascimento else '' }}" required>
                 </div>
                 <div class="mb-3">
                     <label for="imovel_id" class="form-label">Imóvel:</label>
                     <select id="imovel_id" name="imovel_id" class="form-select" required>
                         {% for imovel in imoveis %}
-                            <option value="{{ imovel.id }}">{{ imovel.endereco }}</option>
+                            <option value="{{ imovel.id }}" {% if imovel.id == imovel_id %}selected{% endif %}>
+                                {{ imovel.endereco }}
+                            </option>
                         {% endfor %}
                     </select>
                 </div>

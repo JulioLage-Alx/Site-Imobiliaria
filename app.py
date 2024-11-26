@@ -62,6 +62,8 @@ def add_imovel():
 
 @app.route('/add_inquilino', methods=["GET", "POST"])
 def add_inquilino():
+    nome = cpf = telefone = data_nascimento = imovel_id = None  # Inicializa as variáveis
+
     if request.method == "POST":
         nome = request.form['nome']
         cpf = request.form['cpf']
@@ -75,7 +77,7 @@ def add_inquilino():
             return redirect('/add_inquilino')
 
         if not validar_cpf(cpf):
-            flash("O CPF deve conter exatamente 11 dígitos numéricos.")
+            flash("O CPF não existe.")
             return redirect('/add_inquilino')
 
         if not validar_telefone(telefone):
@@ -112,11 +114,14 @@ def add_inquilino():
 
         return redirect('/')
 
+    # Para uma requisição GET, carrega os imóveis
     cursor = db.cursor(dictionary=True)
     cursor.execute("SELECT id, endereco FROM imovel")
     imoveis = cursor.fetchall()
 
-    return render_template('inquilino.html', imoveis=imoveis)
+    # Passa as variáveis para o template, mesmo em uma requisição GET
+    return render_template('inquilino.html', imoveis=imoveis, nome=nome, cpf=cpf, telefone=telefone, data_nascimento=data_nascimento, imovel_id=imovel_id)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
