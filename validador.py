@@ -1,8 +1,9 @@
 import re
 from datetime import datetime
-
 def validar_cep(cep):
-    return bool(re.fullmatch(r'\d{5}-\d{3}', cep))
+    
+    cep = re.sub(r'\D', '', cep)
+    return bool(re.fullmatch(r'\d{8}', cep))  
 
 def validar_cpf(cpf):
     cpf = cpf.replace(".", "").replace("-", "")

@@ -44,12 +44,28 @@
         .text-center {
             margin-top: 20px;
         }
+        .alert {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="form-container">
             <h1 class="text-center mb-4">Adicionar Imóvel</h1>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-warning" role="alert">
+                        <ul>
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endwith %}
+
             <form method="POST">
                 <div class="mb-3">
                     <label for="endereco" class="form-label">Endereço:</label>

@@ -35,47 +35,27 @@ def add_imovel():
 
         # Validações
         if not endereco:
-            print("Falha na validação do endereço")
             flash("O endereço é obrigatório.")
             return redirect('/add_imovel')
-
         if not validar_cep(cep):
-            print(f"Falha na validação do CEP: {cep}")
-            flash("O CEP deve ser no formato XXXXX-XXX.")
+            flash("O CEP deve conter exatamente 8 dígitos numéricos.")
             return redirect('/add_imovel')
-
         if not validar_valor(valor_aluguel):
-            print(f"Falha na validação do valor do aluguel: {valor_aluguel}")
             flash("O valor do aluguel deve ser um número positivo.")
             return redirect('/add_imovel')
-
         if not nome_proprietario:
-            print("Falha na validação do nome do proprietário")
             flash("O nome do proprietário é obrigatório.")
             return redirect('/add_imovel')
 
-
         # Inserir no banco de dados
-        try:
-            cursor = db.cursor()
-            cursor.execute("""
-                INSERT INTO imovel (endereco, cep, valor_aluguel, nome_proprietario)
-                VALUES (%s, %s, %s, %s)
-            """, (endereco, cep, valor_aluguel, nome_proprietario))
-            db.commit()
+        cursor = db.cursor()
+        cursor.execute("""
+            INSERT INTO imovel (endereco, cep, valor_aluguel, nome_proprietario)
+            VALUES (%s, %s, %s, %s)
+        """, (endereco, cep, valor_aluguel, nome_proprietario))
+        db.commit()
 
-            if cursor.rowcount > 0:
-                flash("Imóvel adicionado com sucesso!")
-            else:
-                flash("Erro ao adicionar o imóvel. Tente novamente.")
-            
-            cursor.close()
-
-        except mysql.connector.Error as err:
-            flash(f"Erro no banco de dados: {err}")
-            print(f"Erro ao adicionar imóvel: {err}")
-            return redirect('/add_imovel')
-
+        flash("Imóvel adicionado com sucesso!")
         return redirect('/')
 
     return render_template('imovel.html')
