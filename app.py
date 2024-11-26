@@ -157,6 +157,32 @@ def excluir_inquilino(id):
         flash("Erro ao excluir inquilino: " + str(e), "danger")
     return redirect('/listar')
 
+@app.route('/editar_inquilino/<int:id>', methods=['GET', 'POST'])
+def editar_inquilino(id):
+    cursor = db.cursor(dictionary=True)
+    if request.method == 'POST':
+        nome = request.form['nome']
+        cpf = request.form['cpf']
+        telefone = request.form['telefone']
+        data_nascimento = request.form['data_nascimento']
+        imovel_id = request.form['imovel_id']
+
+        cursor.execute("""
+            UPDATE inquilino SET nome = %s, cpf = %s, telefone = %s, data_nascimento = %s, imovel_id = %s
+            WHERE id = %s
+        """, (nome, cpf, telefone, data_nascimento, imovel_id, id))
+        db.commit()
+        cursor.close()
+        flash("Inquilino editado com sucesso!", "success")
+        return redirect('/listar')
+
+    cursor.execute("SELECT * FROM inquilino WHERE id = %s", (id,))
+    inquilino = cursor.fetchone()
+    cursor.execute("SELECT id, rua, cidade FROM imovel")  # Para preencher o dropdown com imóveis
+    imoveis = cursor.fetchall()
+    cursor.close()
+    return render_template('editar_inquilino.html', inquilino=inquilino, imoveis=imoveis)
+
 # Rota para editar um imóvel
 @app.route('/editar_imovel/<int:id>', methods=['GET', 'POST'])
 def editar_imovel(id):
@@ -199,6 +225,7 @@ def excluir_imovel(id):
         flash("Imóvel excluído com sucesso!", "success")
     cursor.close()
     return redirect('/listar')
+
 
 # Rota para listar inquilinos e imóveis
 @app.route('/listar')
