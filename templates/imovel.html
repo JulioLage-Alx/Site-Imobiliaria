@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adicionar Imóvel</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -41,12 +40,6 @@
         .btn-secondary:hover {
             color: #ffffff;
         }
-        .text-center {
-            margin-top: 20px;
-        }
-        .alert {
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
@@ -68,16 +61,30 @@
 
             <form method="POST">
                 <div class="mb-3">
-                    <label for="endereco" class="form-label">Endereço:</label>
-                    <input type="text" id="endereco" name="endereco" class="form-control" placeholder="Digite o endereço" required>
-                </div>
-                <div class="mb-3">
                     <label for="cep" class="form-label">CEP:</label>
                     <input type="text" id="cep" name="cep" class="form-control" placeholder="Digite o CEP" required>
+                    
                 </div>
                 <div class="mb-3">
-                    <label for="valor_aluguel" class="form-label">Valor do Aluguel:</label>
-                    <input type="text" id="valor_aluguel" name="valor_aluguel" class="form-control" placeholder="Digite o valor do aluguel" required>
+                    <label for="rua" class="form-label">Rua:</label>
+                    <input type="text" id="rua" name="rua" class="form-control" placeholder="Digite ou preencha a rua">
+                </div>
+                <div class="mb-3">
+                    <label for="cidade" class="form-label">Cidade:</label>
+                    <input type="text" id="cidade" name="cidade" class="form-control" placeholder="Digite ou preencha a cidade">
+                </div>
+                <div class="mb-3">
+                    <label for="numero" class="form-label">Número:</label>
+                    <input type="text" id="numero" name="numero" class="form-control" placeholder="Digite o número" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="complemento" class="form-label">Complemento:</label>
+                    <input type="text" id="complemento" name="complemento" class="form-control" placeholder="Digite o complemento (opcional)">
+                </div>
+                <div class="mb-3">
+                    <label for="valor_aluguel" class="form-label">Valor do Aluguel (R$):</label>
+                    <input type="number" step="0.01" id="valor_aluguel" name="valor_aluguel" class="form-control" placeholder="Digite o valor do aluguel" required>
                 </div>
                 <div class="mb-3">
                     <label for="nome_proprietario" class="form-label">Nome do Proprietário:</label>
@@ -92,7 +99,6 @@
             </div>
         </div>
     </div>
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

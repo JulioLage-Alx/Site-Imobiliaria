@@ -28,14 +28,24 @@ def home():
 @app.route('/add_imovel', methods=["GET", "POST"])
 def add_imovel():
     if request.method == "POST":
-        endereco = request.form['endereco']
-        cep = request.form['cep']
-        valor_aluguel = request.form['valor_aluguel']
-        nome_proprietario = request.form['nome_proprietario']
+        # Captura os campos do formulário
+        cidade = request.form.get('cidade', '').strip()
+        numero = request.form.get('numero', '').strip()
+        rua = request.form.get('rua', '').strip()
+        complemento = request.form.get('complemento', '').strip()
+        cep = request.form.get('cep', '').strip()
+        valor_aluguel = request.form.get('valor_aluguel', '').strip()
+        nome_proprietario = request.form.get('nome_proprietario', '').strip()
 
         # Validações
-        if not endereco:
-            flash("O endereço é obrigatório.")
+        if not cidade:
+            flash("A cidade é obrigatória.")
+            return redirect('/add_imovel')
+        if not rua:
+            flash("A rua é obrigatória.")
+            return redirect('/add_imovel')
+        if not numero or not numero.isdigit():
+            flash("O número do imóvel deve ser preenchido e conter apenas dígitos.")
             return redirect('/add_imovel')
         if not validar_cep(cep):
             flash("O CEP deve conter exatamente 8 dígitos numéricos.")
@@ -48,17 +58,24 @@ def add_imovel():
             return redirect('/add_imovel')
 
         # Inserir no banco de dados
-        cursor = db.cursor()
-        cursor.execute("""
-            INSERT INTO imovel (endereco, cep, valor_aluguel, nome_proprietario)
-            VALUES (%s, %s, %s, %s)
-        """, (endereco, cep, valor_aluguel, nome_proprietario))
-        db.commit()
+        try:
+            cursor = db.cursor()
+            cursor.execute("""
+                INSERT INTO imovel (rua, cidade, numero, complemento, cep, valor_aluguel, nome_proprietario)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (rua, cidade, numero, complemento, cep, valor_aluguel, nome_proprietario))
+            db.commit()
+            flash("Imóvel adicionado com sucesso!")
+        except Exception as e:
+            db.rollback()
+            flash(f"Ocorreu um erro ao adicionar o imóvel: {e}")
+            return redirect('/add_imovel')
 
-        flash("Imóvel adicionado com sucesso!")
         return redirect('/')
 
+    # Renderiza a página de formulário
     return render_template('imovel.html')
+
 
 @app.route('/add_inquilino', methods=["GET", "POST"])
 def add_inquilino():
@@ -116,11 +133,18 @@ def add_inquilino():
 
     # Para uma requisição GET, carrega os imóveis
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT id, endereco FROM imovel")
+    cursor.execute("""
+        SELECT 
+            id, 
+            CONCAT(rua, ', ', numero, IF(complemento != '', CONCAT(', ', complemento), ''), ', ', cidade, ', CEP: ', cep) AS endereco
+        FROM imovel
+    """)
     imoveis = cursor.fetchall()
 
     # Passa as variáveis para o template, mesmo em uma requisição GET
     return render_template('inquilino.html', imoveis=imoveis, nome=nome, cpf=cpf, telefone=telefone, data_nascimento=data_nascimento, imovel_id=imovel_id)
+
+
 
 
 if __name__ == '__main__':

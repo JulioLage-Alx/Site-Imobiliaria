@@ -2,11 +2,15 @@ CREATE DATABASE imobiliaria;
 
 CREATE TABLE imovel (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    endereco VARCHAR(255) NOT NULL,
+    rua VARCHAR(255) NOT NULL,
+    cidade VARCHAR(255) NOT NULL,
+    numero VARCHAR(255) NOT NULL,
+    complemento VARCHAR(255),
     cep VARCHAR(10) NOT NULL,
     valor_aluguel DECIMAL(10,2) NOT NULL,
     nome_proprietario VARCHAR(255) NOT NULL
 );
+
 
 CREATE TABLE inquilino (
     id INT AUTO_INCREMENT PRIMARY KEY,
