@@ -8,7 +8,7 @@ app = Flask(__name__)
 db = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="Julio1975$",  # Substitua com sua senha
+    password="Julio1975$",  
     database="imobiliaria"
 )
 
@@ -62,7 +62,7 @@ def add_imovel():
 
 @app.route('/add_inquilino', methods=["GET", "POST"])
 def add_inquilino():
-    nome = cpf = telefone = data_nascimento = imovel_id = None  # Inicializa as variáveis
+    nome = cpf = telefone = data_nascimento = imovel_id = None  
 
     if request.method == "POST":
         nome = request.form['nome']
