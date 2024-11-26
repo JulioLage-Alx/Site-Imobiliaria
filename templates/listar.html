@@ -40,6 +40,13 @@
         .btn-warning:hover {
             background-color: #e0a800;
         }
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
         .actions {
             display: flex;
             gap: 10px;
@@ -59,17 +66,20 @@
             {% endif %}
         {% endwith %}
 
+        <!-- Botão de Voltar -->
+        <a href="/" class="btn btn-secondary mb-3"><i class="fas fa-arrow-left"></i> Voltar</a>
+
         <!-- Barra de pesquisa -->
         <div class="mb-3">
             <input type="text" id="search" class="form-control" placeholder="Pesquisar Inquilinos ou Imóveis" onkeyup="filterTable()">
         </div>
 
-        <!-- Tabela Geral -->
-        <h3>Inquilinos e Imóveis</h3>
-        <table class="table table-striped" id="inquilinos-imoveis-table">
+        <!-- Tabela Inquilinos -->
+        <h3>Inquilinos</h3>
+        <table class="table table-striped" id="inquilinos-table">
             <thead>
                 <tr>
-                    <th>Nome / Imóvel</th>
+                    <th>Nome</th>
                     <th>Detalhes</th>
                     <th>Ações</th>
                 </tr>
@@ -85,6 +95,20 @@
                     </td>
                 </tr>
                 {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Tabela Imóveis -->
+        <h3>Imóveis</h3>
+        <table class="table table-striped" id="imoveis-table">
+            <thead>
+                <tr>
+                    <th>Imóvel</th>
+                    <th>Detalhes</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
                 {% for imovel in imoveis %}
                 <tr>
                     <td>{{ imovel.rua }} - {{ imovel.cidade }}</td>
@@ -108,10 +132,26 @@
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("search");
             filter = input.value.toLowerCase();
-            table = document.getElementById("inquilinos-imoveis-table");
-            tr = table.getElementsByTagName("tr");
 
-            // Filtra a tabela de inquilinos e imóveis
+            // Filtra a tabela de inquilinos
+            table = document.getElementById("inquilinos-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 1; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td");
+                var match = false;
+                for (var j = 0; j < td.length - 1; j++) {  // Excluindo a coluna "Ações" da pesquisa
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        match = true;
+                        break;
+                    }
+                }
+                tr[i].style.display = match ? "" : "none";
+            }
+
+            // Filtra a tabela de imóveis
+            table = document.getElementById("imoveis-table");
+            tr = table.getElementsByTagName("tr");
             for (i = 1; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td");
                 var match = false;
